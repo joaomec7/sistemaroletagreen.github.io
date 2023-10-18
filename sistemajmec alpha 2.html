@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Mudança de Cor com Horário e Barra de Carregamento</title>
+    <style>
+        body {
+            background-image: url('sua-imagem-de-fundo.jpg'); /* Substitua 'sua-imagem-de-fundo.jpg' pelo caminho da sua imagem de fundo */
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        #color-box {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+
+        #current-time {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        #loader {
+            display: none;
+            width: 100%;
+            height: 20px;
+            background-color: lightgray;
+            position: relative;
+        }
+
+        #loading-bar {
+            height: 100%;
+            width: 0;
+            background-color: blue;
+        }
+    </style>
+</head>
+<body>
+    <button id="color-button">Clique para mudar a cor</button>
+    <div id="color-box"></div>
+    <div id="current-time"></div>
+    <div id="loader">
+        <div id="loading-bar"></div>
+    </div>
+
+    <script>
+        const colorButton = document.getElementById('color-button');
+        const colorBox = document.getElementById('color-box');
+        const currentTime = document.getElementById('current-time');
+        const loader = document.getElementById('loader');
+        const loadingBar = document.getElementById('loading-bar');
+
+        let isLoading = false;
+
+        colorButton.addEventListener('click', () => {
+            if (isLoading) {
+                return;
+            }
+
+            isLoading = true;
+            loader.style.display = 'block';
+            loadingBar.style.width = '0';
+
+            setTimeout(() => {
+                const colors = ['red', 'black'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                colorBox.style.color = randomColor;
+                colorBox.textContent = `Cor: ${randomColor}`;
+
+                isLoading = false;
+                loader.style.display = 'none';
+            }, 2000);
+
+            updateLoadingBar();
+        });
+
+        function updateCurrentTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            currentTime.textContent = `Horário atual: ${hours}:${minutes}:${seconds}`;
+        }
+
+        function updateLoadingBar() {
+            let width = 0;
+            const interval = 30;
+            const update = () => {
+                if (isLoading && width < 100) {
+                    width += interval / 30;
+                    loadingBar.style.width = width + '%';
+                    setTimeout(update, interval);
+                }
+            };
+            update();
+        }
+
+        setInterval(updateCurrentTime, 1000);
+        updateCurrentTime(); // Chame a função uma vez para exibir o horário imediatamente.
+    </script>
+</body>
+</html>
